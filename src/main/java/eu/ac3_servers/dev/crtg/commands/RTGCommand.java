@@ -13,6 +13,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,6 +25,8 @@ import java.util.logging.Level;
  */
 public class RTGCommand implements CommandExecutor
 {
+	public static BukkitTask teleportTask = null;
+	public static BukkitTask startTask = null;
 	private final CRTGPlugin plugin;
 
 	public RTGCommand( CRTGPlugin plugin )
@@ -99,7 +102,9 @@ public class RTGCommand implements CommandExecutor
 					}
 
 					Bukkit.broadcastMessage( c( "&9&lWorld generation complete." ) );
-					plugin.getServer().getScheduler().runTaskTimer( plugin, new TeleportTask( plugin ), 0, 3 );
+					teleportTask = plugin.getServer()
+							.getScheduler()
+							.runTaskTimer( plugin, new TeleportTask( plugin ), 0, 3 );
 				}
 			}, 20 );
 
@@ -164,9 +169,12 @@ class TeleportTask extends BukkitRunnable implements Runnable
 			
 			if ( i >= players.length -1 ) {
 				Bukkit.broadcastMessage( c( "&6&lStarting the game in 90 seconds!" ) );
-				plugin.getServer().getScheduler().runTaskTimer( plugin, new CountDownTask( plugin ), 20, 20 );
+				RTGCommand.startTask = plugin.getServer()
+						.getScheduler()
+						.runTaskTimer( plugin, new CountDownTask( plugin ), 20, 20 );
 				CRTGPlugin.D( "Ended the teleport task." );
-				this.cancel();
+				RTGCommand.teleportTask.cancel();
+				RTGCommand.teleportTask = null;
 				return;
 			}
 			
@@ -217,7 +225,8 @@ class CountDownTask extends BukkitRunnable implements Runnable
 			case 0:
 				Bukkit.getPluginManager().callEvent( new StartCRTGEvent() );
 				CRTGPlugin.D( "Ended the CountDownTask." );
-				this.cancel();
+				RTGCommand.startTask.cancel();
+				RTGCommand.startTask = null;
 				break;
 			default:
 				break;
