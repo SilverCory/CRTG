@@ -4,6 +4,7 @@ import eu.ac3_servers.dev.crtg.CRTGPlugin;
 import eu.ac3_servers.dev.crtg.GameState;
 import eu.ac3_servers.dev.crtg.Worlds;
 import eu.ac3_servers.dev.crtg.event.StartCRTGEvent;
+import eu.ac3_servers.dev.crtg.event.WinCRTGEvent;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
@@ -31,7 +32,7 @@ public class RTGCommand implements CommandExecutor
 
 		if ( args.length == 1 && args[ 0 ].equalsIgnoreCase( "start" ) ) {
 
-			if ( !sender.hasPermission( "rtg.commands.start" ) ) {
+			if ( !sender.hasPermission( "rtg.commands" ) ) {
 				sender.sendMessage( c( "&e&lYou don't have permission to start the game!" ) );
 				return true;
 			}
@@ -107,6 +108,31 @@ public class RTGCommand implements CommandExecutor
 
 			Bukkit.broadcastMessage( c( "&9&lWorld generation complete." ) );
 			plugin.getServer().getScheduler().runTaskTimer( plugin, new TeleportTask( plugin ), 3, 3 );
+			return true;
+
+		}
+
+		if ( args.length == 1 && args[ 0 ].equalsIgnoreCase( "stop" ) ) {
+
+			if ( !sender.hasPermission( "rtg.commands" ) ) {
+				sender.sendMessage( c( "&e&lYou don't have permission to stop the game!" ) );
+				return true;
+			}
+
+			if ( !GameState.getCurrentState().equals( GameState.INGAME ) ) {
+				sender.sendMessage( c( "&d&lA game needs to be running!" ) );
+				return true;
+			}
+
+			if ( !( sender instanceof Player ) ) {
+				sender.sendMessage( c( "&d&lYou need to be a player." ) );
+				return true;
+			}
+
+			Bukkit.broadcastMessage( c( "&d&lThe game was forcefully stopped!" ) );
+			plugin.getServer().getPluginManager().callEvent( new WinCRTGEvent( ( (Player) sender ) ) );
+
+			return true;
 
 		}
 
