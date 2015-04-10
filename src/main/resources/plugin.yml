@@ -1,0 +1,25 @@
+################################
+# Why you read my plugin.yml!? #
+################################
+# Crude Race To Glowstone
+name: CRTG
+
+# Does anybody even change these? O.o
+# We'll leave it to maven.
+version: ${project.version}-B#${env.BUILD_NUMBER}
+
+# Add your name here if you're kewl.
+authors:
+    - 'Cory Redmond'
+
+# Do I have to comment this one?
+description: 'The race for the glowstone plugin for Spigot''s official server.'
+
+# Why not have the main class?!
+main: eu.ac3_servers.dev.crtg.CRTGPlugin
+
+# Commands bro.. One command I cba with any more.
+commands:
+    rtg:
+        usage: /rtg start
+        description: To start the game really.

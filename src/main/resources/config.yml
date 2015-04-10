@@ -1,0 +1,6 @@
+###############################################
+# I'm not going to tell you to use YAML only. #
+###############################################
+debug: true
+
+allow-pvp: true
