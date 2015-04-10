@@ -92,7 +92,7 @@ public class GameListener implements Listener
 
 		GameState.setCurrentState( GameState.INGAME );
 
-		Bukkit.broadcastMessage( c( "2c&lGO!" ) );
+		Bukkit.broadcastMessage( c( "&2&lGO!" ) );
 		Bukkit.broadcastMessage( c( "&cPvP will be enabled in 20 seconds!" ) );
 
 		plugin.getServer().getScheduler().runTaskLater( plugin, new Runnable()
@@ -111,16 +111,16 @@ public class GameListener implements Listener
 	@EventHandler
 	public void onGameWin( WinCRTGEvent e )
 	{
-		Bukkit.broadcastMessage( c( "&a&l" + e.getWinner().getName() + " HAS PLACED THE GLOWSTONE ON THE BEACON!" ) );
+		Bukkit.broadcastMessage( c( "&b&l" + e.getWinner().getName() + "&e HAS PLACED THE GLOWSTONE ON THE BEACON!" ) );
 		Bukkit.broadcastMessage( c( "&aThis game lasted a total of:" ) );
-		Bukkit.broadcastMessage( c( "&c " + getDurationBreakdown( System.currentTimeMillis() - startTime ) ) );
+		Bukkit.broadcastMessage( c( "&c   " + getDurationBreakdown( System.currentTimeMillis() - startTime ) ) );
 		e.getWinner().getInventory().forEach( new Consumer<ItemStack>()
 		{
 			@Override public void accept( ItemStack itemStack )
 			{
 				if(itemStack == null) itemStack = new ItemStack( Material.COOKIE, 1 );
 				itemStack.setType( Material.COOKIE );
-				itemStack.setAmount( 9999 );
+				itemStack.setAmount( 64 );
 			}
 		} );
 		plugin.getServer().getScheduler().runTaskLater( plugin, new Runnable()

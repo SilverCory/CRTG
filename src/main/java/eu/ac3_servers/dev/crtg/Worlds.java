@@ -136,7 +136,7 @@ public class Worlds
 	{
 
 		Location maxLoc = getWorld().getSpawnLocation();
-		maxLoc.setY( 256 );
+		maxLoc.setY( 150 );
 
 		CuboidRegion sel = new CuboidRegion( getEditSession().getWorld(), BukkitUtil.toVector( getWorld().getSpawnLocation()
 																									   .add( 0, 1, 0 ) ), BukkitUtil
@@ -169,16 +169,12 @@ public class Worlds
 		editSession = null;
 
 		if ( nether_world != null ) {
-			File file = nether_world.getWorldFolder();
 			Bukkit.unloadWorld( nether_world, false );
-			deleteFolder( file.getParentFile() );
 			nether_world = null;
 		}
 
 		if ( world != null ) {
-			File file = world.getWorldFolder();
 			Bukkit.unloadWorld( world, false );
-			deleteFolder( file.getParentFile() );
 			world = null;
 		}
 
