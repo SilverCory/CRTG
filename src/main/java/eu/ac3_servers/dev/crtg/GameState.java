@@ -14,6 +14,6 @@ public enum GameState
 
 	@Getter
 	@Setter
-	private static GameState currentState;
+	private static GameState currentState = GameState.NONE;
 
 }
