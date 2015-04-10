@@ -99,7 +99,7 @@ public class RTGCommand implements CommandExecutor
 					}
 
 					Bukkit.broadcastMessage( c( "&9&lWorld generation complete." ) );
-					plugin.getServer().getScheduler().runTaskTimer( plugin, new TeleportTask( plugin ), 3, 3 );
+					plugin.getServer().getScheduler().runTaskTimer( plugin, new TeleportTask( plugin ), 0, 3 );
 				}
 			}, 20 );
 
@@ -159,22 +159,24 @@ class TeleportTask extends BukkitRunnable implements Runnable
 	@Override public void run()
 	{
 
-		if ( i >= players.length - 1 ) {
-			Bukkit.broadcastMessage( c( "&6&lStarting the game in 90 seconds!" ) );
-			plugin.getServer().getScheduler().runTaskTimer( plugin, new CountDownTask( plugin ), 20, 20 );
-			CRTGPlugin.D( "Ended the teleport task." );
-			cancel();
-			return;
-		}
-
 
 		for ( int j = 0; j < 3; j++ ) {
+			
+			if ( i >= players.length -1 ) {
+				Bukkit.broadcastMessage( c( "&6&lStarting the game in 90 seconds!" ) );
+				plugin.getServer().getScheduler().runTaskTimer( plugin, new CountDownTask( plugin ), 20, 20 );
+				CRTGPlugin.D( "Ended the teleport task." );
+				this.cancel();
+				return;
+			}
+			
 			Player p = players[ i++ ];
 			// TODO save the inventory? O.o
 			p.getInventory().clear();
 			p.teleport( loc, PlayerTeleportEvent.TeleportCause.PLUGIN );
 			p.sendMessage( c( "&dYou have been teleported to the game lobby." ) );
 			plugin.addPlayer( p );
+			
 		}
 
 	}
@@ -215,7 +217,7 @@ class CountDownTask extends BukkitRunnable implements Runnable
 			case 0:
 				Bukkit.getPluginManager().callEvent( new StartCRTGEvent() );
 				CRTGPlugin.D( "Ended the CountDownTask." );
-				cancel();
+				this.cancel();
 				break;
 			default:
 				break;
