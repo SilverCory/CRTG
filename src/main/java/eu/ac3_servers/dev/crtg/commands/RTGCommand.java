@@ -1,12 +1,12 @@
 package eu.ac3_servers.dev.crtg.commands;
 
+import com.sk89q.worldedit.MaxChangedBlocksException;
 import eu.ac3_servers.dev.crtg.CRTGPlugin;
 import eu.ac3_servers.dev.crtg.GameState;
 import eu.ac3_servers.dev.crtg.Worlds;
 import eu.ac3_servers.dev.crtg.event.StartCRTGEvent;
 import eu.ac3_servers.dev.crtg.event.WinCRTGEvent;
 import org.bukkit.*;
-import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -16,6 +16,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
 
 /**
  * @author Cory Redmond
@@ -86,41 +87,15 @@ public class RTGCommand implements CommandExecutor
 					Location point1 = loc.add( 7, 4, 7 );
 					Location point2 = loc.subtract( 7, 4, 7 );
 
-					int x, y, z;
-					int maxX, maxY, maxZ;
-					x = point2.getBlockX();
-					y = point2.getBlockY();
-					z = point2.getBlockZ();
+					Worlds.setSpawnPoint1( point1 );
+					Worlds.setSpawnPoint2( point2 );
 
-					maxX = point1.getBlockX();
-					maxY = point1.getBlockY();
-					maxZ = point1.getBlockZ();
-
-					while ( x <= maxX ) {
-						while ( y <= maxY ) {
-							while ( z <= maxZ ) {
-								Block block = Worlds.getWorld().getBlockAt( x, y, z );
-								if ( block == null || !block.getType().equals( Material.AIR ) ) continue;
-								if ( block.getX() != point2.getBlockX() && block.getX() != point1.getBlockX() ) {
-									continue;
-								}
-								if ( block.getZ() != point2.getBlockZ() && block.getZ() != point1.getBlockZ() ) {
-									continue;
-								}
-								block.setType( Material.GLASS );
-								z++;
-							}
-							y++;
-						}
-						x++;
-					}
-					CRTGPlugin.D( "Added the wall around spawn." );
-
-					Location beaconLoc = loc;
-					while ( ( beaconLoc = beaconLoc.add( 0, 1, 0 ) ).getBlockY() <= Worlds.getWorld().getMaxHeight() ) {
-						if ( beaconLoc.getBlock().getType() != null && !beaconLoc.getBlock()
-								.getType()
-								.equals( Material.AIR ) ) { beaconLoc.getBlock().setType( Material.AIR ); }
+					try {
+						Worlds.addWall();
+						CRTGPlugin.D( "Added the wall around spawn." );
+					} catch ( MaxChangedBlocksException e ) {
+						CRTGPlugin.getLog()
+								.log( Level.WARNING, "The max number of blocks was changed when creating the wall." );
 					}
 
 					Bukkit.broadcastMessage( c( "&9&lWorld generation complete." ) );

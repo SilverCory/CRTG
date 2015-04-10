@@ -69,12 +69,26 @@
             <artifactId>spigot-api</artifactId>
             <version>1.8.3-R0.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.sk89q</groupId>
+            <artifactId>worldedit</artifactId>
+            <version>6.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sk89q</groupId>
+            <artifactId>worldedit</artifactId>
+            <version>6.0.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <repositories>
         <repository>
             <id>Spigot-Hub</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
+            <id>sk89q</id>
+            <url>http://maven.sk89q.com/repo/</url>
         </repository>
     </repositories>
 

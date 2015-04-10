@@ -1,14 +1,13 @@
 package eu.ac3_servers.dev.crtg.listeners;
 
+import com.sk89q.worldedit.MaxChangedBlocksException;
 import eu.ac3_servers.dev.crtg.CRTGPlugin;
 import eu.ac3_servers.dev.crtg.Worlds;
 import eu.ac3_servers.dev.crtg.event.StartCRTGEvent;
 import eu.ac3_servers.dev.crtg.event.WinCRTGEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import java.util.logging.Level;
 
 /**
  * @author Cory Redmond
@@ -79,37 +79,13 @@ public class GameListener implements Listener
 	public void onGameStart( StartCRTGEvent e )
 	{
 
-		Location loc = Worlds.getWorld().getSpawnLocation();
-		Location point1 = loc.add( 7, 4, 7 );
-		Location point2 = loc.subtract( 7, 4, 7 );
-
-		int x, y, z;
-		int maxX, maxY, maxZ;
-		x = point2.getBlockX();
-		y = point2.getBlockY();
-		z = point2.getBlockZ();
-
-		maxX = point1.getBlockX();
-		maxY = point1.getBlockY();
-		maxZ = point1.getBlockZ();
-
-		while ( x <= maxX ) {
-			while ( y <= maxY ) {
-				while ( z <= maxZ ) {
-					Block block = Worlds.getWorld().getBlockAt( x, y, z );
-					if ( block == null || !block.getType().equals( Material.GLASS ) ) continue;
-					if ( block.getX() != point2.getBlockX() && block.getX() != point1.getBlockX() ) continue;
-					if ( block.getZ() != point2.getBlockZ() && block.getZ() != point1.getBlockZ() ) continue;
-					block.setType( Material.AIR );
-					z++;
-				}
-				y++;
-			}
-			x++;
+		try {
+			Worlds.addWall();
+			CRTGPlugin.D( "Added the wall around spawn." );
+			Worlds.placeBeacon();
+		} catch ( MaxChangedBlocksException ex ) {
+			CRTGPlugin.getLog().log( Level.WARNING, "The max number of blocks was changed when removing the wall." );
 		}
-
-		Location beacon = loc.subtract( 0, 1, 0 );
-		beacon.getBlock().setType( Material.BEACON );
 
 		startTime = System.currentTimeMillis();
 

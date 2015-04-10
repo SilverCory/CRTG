@@ -18,6 +18,10 @@ description: 'The race for the glowstone plugin for Spigot''s official server.'
 # Why not have the main class?!
 main: eu.ac3_servers.dev.crtg.CRTGPlugin
 
+# I rely on you.
+depend:
+    - 'worldedit'
+
 # Commands bro.. One command I cba with any more.
 commands:
     rtg:
