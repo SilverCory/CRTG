@@ -75,10 +75,12 @@ public class RTGCommand implements CommandExecutor
 					wc.environment( World.Environment.NORMAL );
 
 					Worlds.setWorld( wc.createWorld() );
+					CRTGPlugin.D( "Normal world created." );
 
 					Worlds.getWorld().setKeepSpawnInMemory( false );
 					Worlds.getWorld().setDifficulty( Difficulty.HARD );
 					Worlds.getWorld().setPVP( false );
+					CRTGPlugin.D( "Defaults set." );
 
 					Location loc = Worlds.getWorld().getSpawnLocation();
 					Location point1 = loc.add( 7, 4, 7 );
@@ -112,6 +114,7 @@ public class RTGCommand implements CommandExecutor
 						}
 						x++;
 					}
+					CRTGPlugin.D( "Added the wall around spawn." );
 
 					Location beaconLoc = loc;
 					while ( ( beaconLoc = beaconLoc.add( 0, 1, 0 ) ).getBlockY() <= Worlds.getWorld().getMaxHeight() ) {
