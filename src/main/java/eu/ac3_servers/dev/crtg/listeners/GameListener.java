@@ -95,7 +95,9 @@ public class GameListener implements Listener
 			while ( y <= maxY ) {
 				while ( z <= maxZ ) {
 					Block block = Worlds.getWorld().getBlockAt( x, y, z );
-					if ( block == null || !block.getType().equals( Material.GLASS ) ) { continue; }
+					if ( block == null || !block.getType().equals( Material.GLASS ) ) continue;
+					if ( block.getX() != point2.getBlockX() && block.getX() != point1.getBlockX() ) continue;
+					if ( block.getZ() != point2.getBlockZ() && block.getZ() != point1.getBlockZ() ) continue;
 					block.setType( Material.AIR );
 					z++;
 				}

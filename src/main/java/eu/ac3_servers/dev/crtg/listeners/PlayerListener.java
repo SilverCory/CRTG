@@ -76,6 +76,7 @@ public class PlayerListener implements Listener
 		} );
 		player.getInventory().clear();
 		player.teleport( player.getBedSpawnLocation() );
+		plugin.delPlayer( player.getUniqueId() );
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -96,6 +97,7 @@ public class PlayerListener implements Listener
 		} );
 		player.getInventory().clear();
 		player.teleport( player.getBedSpawnLocation() );
+		plugin.delPlayer( player.getUniqueId() );
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

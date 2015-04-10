@@ -87,7 +87,9 @@ public class RTGCommand implements CommandExecutor
 				while ( y <= maxY ) {
 					while ( z <= maxZ ) {
 						Block block = Worlds.getWorld().getBlockAt( x, y, z );
-						if ( block == null || !block.getType().equals( Material.AIR ) ) { continue; }
+						if ( block == null || !block.getType().equals( Material.AIR ) ) continue;
+						if ( block.getX() != point2.getBlockX() && block.getX() != point1.getBlockX() ) continue;
+						if ( block.getZ() != point2.getBlockZ() && block.getZ() != point1.getBlockZ() ) continue;
 						block.setType( Material.GLASS );
 						z++;
 					}
@@ -150,6 +152,7 @@ class TeleportTask extends BukkitRunnable implements Runnable
 			p.getInventory().clear();
 			p.teleport( loc, PlayerTeleportEvent.TeleportCause.PLUGIN );
 			p.sendMessage( c( "&dYou have been teleported to the game lobby." ) );
+			plugin.addPlayer( p );
 		}
 
 	}
