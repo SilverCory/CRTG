@@ -129,7 +129,7 @@ public class GameListener implements Listener
 			{
 				for ( Player player : Bukkit.getOnlinePlayers() ) {
 					if ( !plugin.playerIsInGame( player ) ) continue;
-					plugin.delPlayer( player.getUniqueID() );
+					plugin.delPlayer( player.getUniqueId() );
 					player.setHealth( 0.00 );
 				}
 				Worlds.cleanup();
