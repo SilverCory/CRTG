@@ -20,7 +20,7 @@ main: eu.ac3_servers.dev.crtg.CRTGPlugin
 
 # I rely on you.
 depend:
-    - 'worldedit'
+    - 'WorldEdit'
 
 # Commands bro.. One command I cba with any more.
 commands:
