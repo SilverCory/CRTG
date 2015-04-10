@@ -171,14 +171,14 @@ public class Worlds
 		if ( nether_world != null ) {
 			File file = nether_world.getWorldFolder();
 			Bukkit.unloadWorld( nether_world, false );
-			deleteFolder( file );
+			deleteFolder( file.getParentFile() );
 			nether_world = null;
 		}
 
 		if ( world != null ) {
 			File file = world.getWorldFolder();
 			Bukkit.unloadWorld( world, false );
-			deleteFolder( file );
+			deleteFolder( file.getParentFile() );
 			world = null;
 		}
 
