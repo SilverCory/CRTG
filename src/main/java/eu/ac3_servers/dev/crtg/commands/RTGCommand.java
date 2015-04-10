@@ -147,7 +147,7 @@ class TeleportTask extends BukkitRunnable implements Runnable
 	private final CRTGPlugin plugin;
 	private final Player[] players;
 	private final Location loc;
-	private int i = -1;
+	private int i = 0;
 
 	/**
 	 * If there's lots of players it lags some people.
@@ -178,7 +178,8 @@ class TeleportTask extends BukkitRunnable implements Runnable
 				return;
 			}
 			
-			Player p = players[ i++ ];
+			Player p = players[ i ];
+			i++;
 			// TODO save the inventory? O.o
 			p.getInventory().clear();
 			p.teleport( loc, PlayerTeleportEvent.TeleportCause.PLUGIN );
