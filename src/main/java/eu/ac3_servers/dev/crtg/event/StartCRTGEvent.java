@@ -1,5 +1,6 @@
 package eu.ac3_servers.dev.crtg.event;
 
+import eu.ac3_servers.dev.crtg.CRTGPlugin;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
@@ -11,6 +12,11 @@ public class StartCRTGEvent extends Event
 {
 
 	public static HandlerList handlers = new HandlerList();
+
+	public StartCRTGEvent()
+	{
+		CRTGPlugin.D( "Start event called!" );
+	}
 
 	public static HandlerList getHandlerList()
 	{

@@ -1,5 +1,6 @@
 package eu.ac3_servers.dev.crtg.event;
 
+import eu.ac3_servers.dev.crtg.CRTGPlugin;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -11,6 +12,7 @@ import org.bukkit.event.HandlerList;
  */
 public class WinCRTGEvent extends Event
 {
+
 	public static HandlerList handlers = new HandlerList();
 	@Getter
 	private final Player winner;
@@ -18,6 +20,7 @@ public class WinCRTGEvent extends Event
 	public WinCRTGEvent( Player winner )
 	{
 		this.winner = winner;
+		CRTGPlugin.D( "There is a winner! " + winner.getName() );
 	}
 
 	public static HandlerList getHandlerList()

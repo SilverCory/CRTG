@@ -2,6 +2,7 @@ package eu.ac3_servers.dev.crtg.listeners;
 
 import com.sk89q.worldedit.MaxChangedBlocksException;
 import eu.ac3_servers.dev.crtg.CRTGPlugin;
+import eu.ac3_servers.dev.crtg.GameState;
 import eu.ac3_servers.dev.crtg.Worlds;
 import eu.ac3_servers.dev.crtg.event.StartCRTGEvent;
 import eu.ac3_servers.dev.crtg.event.WinCRTGEvent;
@@ -80,8 +81,8 @@ public class GameListener implements Listener
 	{
 
 		try {
-			Worlds.addWall();
-			CRTGPlugin.D( "Added the wall around spawn." );
+			Worlds.removeWall();
+			CRTGPlugin.D( "Removed the wall around spawn." );
 			Worlds.placeBeacon();
 		} catch ( MaxChangedBlocksException ex ) {
 			CRTGPlugin.getLog().log( Level.WARNING, "The max number of blocks was changed when removing the wall." );
@@ -89,7 +90,21 @@ public class GameListener implements Listener
 
 		startTime = System.currentTimeMillis();
 
-		Worlds.getWorld().setPVP( plugin.getConfig().getBoolean( "allow-pvp", true ) );
+		GameState.setCurrentState( GameState.INGAME );
+
+		Bukkit.broadcastMessage( c( "2c&lGO!" ) );
+		Bukkit.broadcastMessage( c( "&cPvP will be enabled in 20 seconds!" ) );
+
+		plugin.getServer().getScheduler().runTaskLater( plugin, new Runnable()
+		{
+			@Override public void run()
+			{
+
+				Bukkit.broadcastMessage( c( "&c&lPvP IS ENABLED!" ) );
+				Worlds.getWorld().setPVP( plugin.getConfig().getBoolean( "allow-pvp", true ) );
+
+			}
+		}, 20 * 20 );
 
 	}
 
@@ -115,10 +130,10 @@ public class GameListener implements Listener
 					if ( !plugin.playerIsInGame( player ) ) continue;
 					player.setHealth( -3 );
 				}
+				Worlds.cleanup();
+				GameState.setCurrentState( GameState.NONE );
 			}
 		}, 20 * 20 );
-
-		Worlds.cleanup();
 
 	}
 
