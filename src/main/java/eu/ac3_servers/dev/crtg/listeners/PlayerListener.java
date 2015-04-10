@@ -70,6 +70,7 @@ public class PlayerListener implements Listener
 			// Java 8 would be kinda sexy here..
 			@Override public void accept( ItemStack itemStack )
 			{
+				if( itemStack == null ) return;
 				ItemStack is = itemStack.clone();
 				Worlds.getWorld().dropItem( itemLocation, is );
 			}
@@ -116,7 +117,11 @@ public class PlayerListener implements Listener
 	public void onPlayerPlace( BlockPlaceEvent e )
 	{
 		if ( !plugin.playerIsInGame( e.getPlayer() ) ) return;
-		if ( !e.getBlockPlaced().getType().equals( Material.GLOWSTONE ) ) return;
+		if ( !e.getBlockPlaced().getType().equals( Material.GLOWSTONE ) )
+			if( Worlds.locIsInSpawn( e.getClickedBlock().getLocation() ) {
+				e.setCancelled(true);
+				e.getPlayer().sendMessage( c( "&cYou're not allowed to build near the beacon!" ) );
+			}
 		Location loc = e.getBlockPlaced().getLocation().subtract( 0, 1, 0 );
 		if ( loc.getBlock().getType().equals( Material.BEACON ) ) {
 			plugin.getServer().getPluginManager().callEvent( new WinCRTGEvent( e.getPlayer() ) );
@@ -127,14 +132,14 @@ public class PlayerListener implements Listener
 	public void onPortal( PlayerPortalEvent e )
 	{
 		if ( !plugin.playerIsInGame( e.getPlayer() ) ) return;
-		if ( e.getPlayer().getWorld().equals( Worlds.getWorld() ) ) {
+		if ( e.getPlayer().getWorld().getName().equals( Worlds.getWorld().getName() ) ) {
 			Location loc = e.getPlayer().getLocation();
 			loc.setWorld( Worlds.getNetherWorld() );
 			e.getPortalTravelAgent().findOrCreate( e.getPlayer().getLocation() );
 		}
-		else if ( e.getPlayer().getWorld().equals( Worlds.getNetherWorld() ) ) {
+		else if ( e.getPlayer().getWorld().getName().equals( Worlds.getNetherWorld().getName() ) ) {
 			Location loc = e.getPlayer().getLocation();
-			loc.setWorld( Worlds.getNetherWorld() );
+			loc.setWorld( Worlds.getWorld() );
 			e.getPortalTravelAgent().findOrCreate( e.getPlayer().getLocation() );
 		}
 		e.getPlayer().sendMessage( "WAT?!" );
