@@ -25,7 +25,11 @@ public class RTGCommand implements CommandExecutor
 {
 	private final CRTGPlugin plugin;
 
-	public RTGCommand( CRTGPlugin plugin ) { this.plugin = plugin; }
+	public RTGCommand( CRTGPlugin plugin )
+	{
+		this.plugin = plugin;
+		CRTGPlugin.D( "Initialised the RTGCommand executor." );
+	}
 
 	@Override public boolean onCommand( CommandSender sender, Command command, String s, String[] args )
 	{
@@ -58,56 +62,69 @@ public class RTGCommand implements CommandExecutor
 			Worlds.setNetherWorld( wc_nether.createWorld() );
 
 			Worlds.getNetherWorld().setKeepSpawnInMemory( false );
+			Worlds.getNetherWorld().setPVP( plugin.getConfig().getBoolean( "allow-pvp", true ) );
 			Worlds.getNetherWorld().setDifficulty( Difficulty.HARD );
 
-			// Create the normal world.
-			WorldCreator wc = new WorldCreator( CRTGPlugin.getWorldName() );
-			wc.environment( World.Environment.NORMAL );
+			// Give the server a break.. It had a tough time you know!
+			plugin.getServer().getScheduler().runTaskLater( plugin, new Runnable()
+			{
+				@Override public void run()
+				{
+					// Create the normal world.
+					WorldCreator wc = new WorldCreator( CRTGPlugin.getWorldName() );
+					wc.environment( World.Environment.NORMAL );
 
-			Worlds.setWorld( wc.createWorld() );
+					Worlds.setWorld( wc.createWorld() );
 
-			Worlds.getWorld().setKeepSpawnInMemory( false );
-			Worlds.getWorld().setDifficulty( Difficulty.HARD );
-			Worlds.getWorld().setPVP( false );
+					Worlds.getWorld().setKeepSpawnInMemory( false );
+					Worlds.getWorld().setDifficulty( Difficulty.HARD );
+					Worlds.getWorld().setPVP( false );
 
-			Location loc = Worlds.getWorld().getSpawnLocation();
-			Location point1 = loc.add( 7, 4, 7 );
-			Location point2 = loc.subtract( 7, 4, 7 );
+					Location loc = Worlds.getWorld().getSpawnLocation();
+					Location point1 = loc.add( 7, 4, 7 );
+					Location point2 = loc.subtract( 7, 4, 7 );
 
-			int x, y, z;
-			int maxX, maxY, maxZ;
-			x = point2.getBlockX();
-			y = point2.getBlockY();
-			z = point2.getBlockZ();
+					int x, y, z;
+					int maxX, maxY, maxZ;
+					x = point2.getBlockX();
+					y = point2.getBlockY();
+					z = point2.getBlockZ();
 
-			maxX = point1.getBlockX();
-			maxY = point1.getBlockY();
-			maxZ = point1.getBlockZ();
+					maxX = point1.getBlockX();
+					maxY = point1.getBlockY();
+					maxZ = point1.getBlockZ();
 
-			while ( x <= maxX ) {
-				while ( y <= maxY ) {
-					while ( z <= maxZ ) {
-						Block block = Worlds.getWorld().getBlockAt( x, y, z );
-						if ( block == null || !block.getType().equals( Material.AIR ) ) continue;
-						if ( block.getX() != point2.getBlockX() && block.getX() != point1.getBlockX() ) continue;
-						if ( block.getZ() != point2.getBlockZ() && block.getZ() != point1.getBlockZ() ) continue;
-						block.setType( Material.GLASS );
-						z++;
+					while ( x <= maxX ) {
+						while ( y <= maxY ) {
+							while ( z <= maxZ ) {
+								Block block = Worlds.getWorld().getBlockAt( x, y, z );
+								if ( block == null || !block.getType().equals( Material.AIR ) ) continue;
+								if ( block.getX() != point2.getBlockX() && block.getX() != point1.getBlockX() ) {
+									continue;
+								}
+								if ( block.getZ() != point2.getBlockZ() && block.getZ() != point1.getBlockZ() ) {
+									continue;
+								}
+								block.setType( Material.GLASS );
+								z++;
+							}
+							y++;
+						}
+						x++;
 					}
-					y++;
+
+					Location beaconLoc = loc;
+					while ( ( beaconLoc = beaconLoc.add( 0, 1, 0 ) ).getBlockY() <= Worlds.getWorld().getMaxHeight() ) {
+						if ( beaconLoc.getBlock().getType() != null && !beaconLoc.getBlock()
+								.getType()
+								.equals( Material.AIR ) ) { beaconLoc.getBlock().setType( Material.AIR ); }
+					}
+
+					Bukkit.broadcastMessage( c( "&9&lWorld generation complete." ) );
+					plugin.getServer().getScheduler().runTaskTimer( plugin, new TeleportTask( plugin ), 3, 3 );
 				}
-				x++;
-			}
+			}, 20 );
 
-			Location beaconLoc = loc;
-			while ( ( beaconLoc = beaconLoc.add( 0, 1, 0 ) ).getBlockY() <= Worlds.getWorld().getMaxHeight() ) {
-				if ( beaconLoc.getBlock().getType() != null && !beaconLoc.getBlock()
-						.getType()
-						.equals( Material.AIR ) ) { beaconLoc.getBlock().setType( Material.AIR ); }
-			}
-
-			Bukkit.broadcastMessage( c( "&9&lWorld generation complete." ) );
-			plugin.getServer().getScheduler().runTaskTimer( plugin, new TeleportTask( plugin ), 3, 3 );
 			return true;
 
 		}
@@ -167,6 +184,7 @@ class TeleportTask extends BukkitRunnable implements Runnable
 		if ( i >= players.length - 1 ) {
 			Bukkit.broadcastMessage( c( "&6&lStarting the game in 90 seconds!" ) );
 			plugin.getServer().getScheduler().runTaskTimer( plugin, new CountDownTask( plugin ), 20, 20 );
+			CRTGPlugin.D( "Ended the teleport task." );
 			cancel();
 			return;
 		}
@@ -218,6 +236,7 @@ class CountDownTask extends BukkitRunnable implements Runnable
 				break;
 			case 0:
 				Bukkit.getPluginManager().callEvent( new StartCRTGEvent() );
+				CRTGPlugin.D( "Ended the CountDownTask." );
 				cancel();
 				break;
 			default:
