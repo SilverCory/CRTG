@@ -167,7 +167,7 @@ class TeleportTask extends BukkitRunnable implements Runnable
 
 		for ( int j = 0; j < 3; j++ ) {
 			
-			if ( i >= players.length -1 ) {
+			if ( i >= players.length ) {
 				Bukkit.broadcastMessage( c( "&6&lStarting the game in 90 seconds!" ) );
 				RTGCommand.startTask = plugin.getServer()
 						.getScheduler()
