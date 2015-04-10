@@ -127,12 +127,14 @@ public class GameListener implements Listener
 		{
 			@Override public void run()
 			{
-				GameState.setCurrentState( GameState.NONE );
 				for ( Player player : Bukkit.getOnlinePlayers() ) {
 					if ( !plugin.playerIsInGame( player ) ) continue;
+					plugin.delPlayer( player.getUniqueID() );
 					player.setHealth( 0.00 );
 				}
 				Worlds.cleanup();
+				plugin.clearPlayers();
+				GameState.setCurrentState( GameState.NONE );
 			}
 		}, 20 * 20 );
 
