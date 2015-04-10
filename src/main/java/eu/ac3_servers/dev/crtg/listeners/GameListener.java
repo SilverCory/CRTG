@@ -12,8 +12,10 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 /**
  * @author Cory Redmond
@@ -121,6 +123,14 @@ public class GameListener implements Listener
 		Bukkit.broadcastMessage( c( "&a&l" + e.getWinner().getName() + " HAS PLACED THE GLOWSTONE ON THE BEACON!" ) );
 		Bukkit.broadcastMessage( c( "&aThis game lasted a total of:" ) );
 		Bukkit.broadcastMessage( c( "&c " + getDurationBreakdown( System.currentTimeMillis() - startTime ) ) );
+		e.getWinner().getInventory().forEach( new Consumer<ItemStack>()
+		{
+			@Override public void accept( ItemStack itemStack )
+			{
+				itemStack.setType( Material.COOKIE );
+				itemStack.setAmount( 9999 );
+			}
+		} );
 		plugin.getServer().getScheduler().runTaskLater( plugin, new Runnable()
 		{
 			@Override public void run()
