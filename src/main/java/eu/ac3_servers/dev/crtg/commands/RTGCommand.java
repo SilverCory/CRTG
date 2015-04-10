@@ -152,7 +152,7 @@ class TeleportTask extends BukkitRunnable implements Runnable
 	public TeleportTask( CRTGPlugin plugin )
 	{
 		this.plugin = plugin;
-		this.players = (Player[]) Bukkit.getOnlinePlayers().toArray();
+		this.players = Bukkit.getOnlinePlayers().toArray(new Player[Bukkit.getOnlinePlayers().size()]);
 		this.loc = Worlds.getWorld().getSpawnLocation();
 	}
 
