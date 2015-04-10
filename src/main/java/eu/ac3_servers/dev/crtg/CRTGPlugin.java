@@ -42,7 +42,7 @@ public class CRTGPlugin extends JavaPlugin
 	/**
 	 * The list of players.
 	 */
-	private HashSet<UUID> uuidList;
+	private HashSet<UUID> uuidList = new HashSet<UUID>();;
 
 	/**
 	 * Static debug message printing.

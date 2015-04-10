@@ -118,6 +118,7 @@ public class GameListener implements Listener
 		{
 			@Override public void accept( ItemStack itemStack )
 			{
+				if(itemStack == null) itemStack = new ItemStack( Material.COOKIE, 1 );
 				itemStack.setType( Material.COOKIE );
 				itemStack.setAmount( 9999 );
 			}
